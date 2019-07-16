@@ -5,7 +5,7 @@ get-douban-photos.py
 
 Created by likuku on 2017-08-21.
 Copyright (c) 2017 __MyCompanyName__. All rights reserved.
-update on 23:47 2017-08-29.
+update on 2019-07-16.
 """
 
 import sys
@@ -68,7 +68,7 @@ def get_list_url_str_photo(input_album_url):
     from pyquery import PyQuery as pyq
     _url_str = input_album_url
     _list_url_str_photo = []
-    _url_str_next_page is None
+    _url_str_next_page = None
     try:
         pass
         # <2017-08-29
@@ -90,7 +90,7 @@ def get_list_url_str_photo(input_album_url):
             list_url_str_photo.append(_url_str_photo_page)
         # print((_url_str_next_page is not None) and (_url_str_next_page.find('type=rec') == -1))
         # while ((_url_str_next_page is not None) and (_url_str_next_page.find('type=rec') == -1)):
-        if ((_url_str_next_page is not None) and (_url_str_next_page.find('type=rec') == -1)):
+        if ((_url_str_next_page is not None) and (_url_str_next_page.find('type=rec') is -1)):
             pass
             # <2017-08-29
             # print('_url_str_next_page in while:',_url_str_next_page)
@@ -99,6 +99,8 @@ def get_list_url_str_photo(input_album_url):
             # 2017-08-29 >
             get_list_url_str_photo(_url_str_next_page)
         # return(_list_url_str_photo)
+        # print(list_url_str_photo)
+        return(list_url_str_photo)
     except Exception as e:
         raise
     # 2017-08-27>
@@ -146,7 +148,9 @@ def test(arg):
     # _url_str = 'https://www.douban.com/photos/album/xxxx/'
     _url_str = sys.argv[1]
     print(_url_str)
-    # sys.exit()
+    photo_url_list = get_list_url_str_photo(_url_str)
+    print(photo_url_list,len(photo_url_list),len(list(set(photo_url_list))))
+    sys.exit()
     try:
         pass
         doc = pyq(url=_url_str)
@@ -176,7 +180,7 @@ def test(arg):
         _doc_photo_large = pyq(url=_url_str_photo_large)
         _url_str_photo_large_file = _doc_photo_large('.pic-wrap')('img').attr('src')
         print('_url_str_photo_large_file:', _url_str_photo_large_file)
-        get_photo_from_list_url_str_photo_file([_url_str_photo_large_file])
+        # get_photo_from_list_url_str_photo_file([_url_str_photo_large_file])
         # print(get_url_str_photo_file(_url_str_photo_page))
         # 2017-08-27 >
     except Exception as e:
