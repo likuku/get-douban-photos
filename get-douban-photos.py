@@ -61,6 +61,42 @@ def get_list_url_str_photo_file(input_list_url_str_photo):
     # 2017-08-29>
 
 
+def get_url_str_photo_file(input_photo_url):
+    pass
+    # <2017-08-27
+    from pyquery import PyQuery as pyq
+    _url_str = input_photo_url
+    # <2017-08-29
+    # time.sleep(0.03)
+    # 2017-08-29>
+    try:
+        pass
+        # <2017-08-29
+        _response = requests.get(_url_str, headers={'User-Agent': random.choice(USER_AGENTS)})
+        _html = _response.content
+        _doc_photo_page = pyq(_html)
+        # 2017-08-29>
+        _url_str_photo_large = _doc_photo_page('.photo-edit')('a').attr('href')
+        if _url_str_photo_large is not None:
+            pass
+            # <2017-08-29
+            _response = requests.get(_url_str_photo_large, headers={'User-Agent': random.choice(USER_AGENTS)})
+            _html = _response.content
+            _doc_photo_large = pyq(_html)
+            # 2017-08-29>
+            _url_str_photo_large_file = _doc_photo_large('.pic-wrap')('img').attr('src')
+            _url_str_photo_file = _url_str_photo_large_file
+        else:
+            _url_str_photo_main = _doc_photo_page('.mainphoto')('img').attr('src')
+            _url_str_photo_file = _url_str_photo_main
+    except Exception as e:
+        raise
+        pass
+        _url_str_photo_file is None
+    return(_url_str_photo_file)
+    # 2017-08-27 >
+
+
 def get_list_url_str_photo(input_album_url):
     pass
     # < 2017-08-27
@@ -104,42 +140,6 @@ def get_list_url_str_photo(input_album_url):
     except Exception as e:
         raise
     # 2017-08-27>
-
-
-def get_url_str_photo_file(input_photo_url):
-    pass
-    # <2017-08-27
-    from pyquery import PyQuery as pyq
-    _url_str = input_photo_url
-    # <2017-08-29
-    # time.sleep(0.03)
-    # 2017-08-29>
-    try:
-        pass
-        # <2017-08-29
-        _response = requests.get(_url_str, headers={'User-Agent': random.choice(USER_AGENTS)})
-        _html = _response.content
-        _doc_photo_page = pyq(_html)
-        # 2017-08-29>
-        _url_str_photo_large = _doc_photo_page('.photo-edit')('a').attr('href')
-        if _url_str_photo_large is not None:
-            pass
-            # <2017-08-29
-            _response = requests.get(_url_str_photo_large, headers={'User-Agent': random.choice(USER_AGENTS)})
-            _html = _response.content
-            _doc_photo_large = pyq(_html)
-            # 2017-08-29>
-            _url_str_photo_large_file = _doc_photo_large('.pic-wrap')('img').attr('src')
-            _url_str_photo_file = _url_str_photo_large_file
-        else:
-            _url_str_photo_main = _doc_photo_page('.mainphoto')('img').attr('src')
-            _url_str_photo_file = _url_str_photo_main
-    except Exception as e:
-        raise
-        pass
-        _url_str_photo_file is None
-    return(_url_str_photo_file)
-    # 2017-08-27 >
 
 
 def test(arg):
