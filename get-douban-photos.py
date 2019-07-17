@@ -5,7 +5,7 @@ get-douban-photos.py
 
 Created by likuku on 2017-08-21.
 Copyright (c) 2017 __MyCompanyName__. All rights reserved.
-update on 2019-07-16.
+update on 2019-07-18.
 """
 
 import sys
@@ -37,10 +37,12 @@ def get_photo_from_list_url_str_photo_file(input_list_url_str_photo):
             try:
                 pass
                 _img_name_str = _url_str.rsplit('/', 1)[1]
+                print('Download: %s' % _url_str, end=' ')
                 _response = requests.get(_url_str, headers={'User-Agent': random.choice(USER_AGENTS)})
                 # print(_response.headers)
                 if _response.status_code == requests.codes.ok:
                     open(_img_name_str, 'wb').write(_response.content)
+                    print('%9d/%d OK' % (_index+1, len(_list)))
             except Exception as e:
                 raise
     # 2017-08-29>
@@ -54,6 +56,7 @@ def get_list_url_str_photo_file(input_list_url_str_photo):
     _list = []
     for _index in range(len(_list_url_photo_page)):
         pass
+        time.sleep(random.random())
         _tmp_url = get_url_str_photo_file(_list_url_photo_page[_index])
         _list.append(_tmp_url)
         # print(_index)
@@ -149,7 +152,10 @@ def test(arg):
     _url_str = sys.argv[1]
     print(_url_str)
     photo_url_list = get_list_url_str_photo(_url_str)
-    print(photo_url_list,len(photo_url_list),len(list(set(photo_url_list))))
+    photo_file_url_list = get_list_url_str_photo_file(photo_url_list)
+    print(photo_url_list, len(photo_url_list), len(list(set(photo_url_list))))
+    print(photo_file_url_list,)
+    get_photo_from_list_url_str_photo_file(photo_file_url_list)
     sys.exit()
     try:
         pass
