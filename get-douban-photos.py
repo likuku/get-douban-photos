@@ -24,6 +24,17 @@ USER_AGENTS = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/2010
 list_url_str_photo = []
 
 
+def make_dirs_for_work():
+    _dir = 'images'
+    if os.path.isdir(_dir):
+        print('# Info: dir %s is existed' % _dir)
+    elif os.path.isfile(_dir):
+        print('# Error: %s is a File !' % _dir)
+        sys.exit()
+    else:
+        os.makedirs(_dir, mode=0o755)
+
+
 def get_photo_from_list_url_str_photo_file(input_list_url_str_photo):
     pass
     # < 2017-08-29
@@ -200,7 +211,8 @@ def test(arg):
 
 def main():
     pass
-    test('')
+    make_dirs_for_work()
+    #test('')
 
 if __name__ == '__main__':
     main()
