@@ -47,12 +47,12 @@ def get_photo_from_list_url_str_photo_file(input_list_url_str_photo):
             try:
                 pass
                 _img_name_str = _url_str.rsplit('/', 1)[1]
-                if os.path.isfile(_img_name_str) is False:
+                if os.path.isfile('images/%s' % _img_name_str) is False:
                     print('Download: %s' % _url_str, end=' ')
                     _response = requests.get(_url_str, headers={'User-Agent': random.choice(USER_AGENTS)})
                     # print(_response.headers)
                     if _response.status_code == requests.codes.ok:
-                        open(_img_name_str, 'wb').write(_response.content)
+                        open('images/%s' % _img_name_str, 'wb').write(_response.content)
                         print('%9d/%d OK' % (_index+1, len(_list)))
                 else:
                     print('Download: %s' % _url_str, end=' ')
@@ -212,7 +212,7 @@ def test(arg):
 def main():
     pass
     make_dirs_for_work()
-    #test('')
+    test('')
 
 if __name__ == '__main__':
     main()
