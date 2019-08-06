@@ -5,7 +5,6 @@ get-douban-photos.py
 
 Created by likuku on 2017-08-21.
 Copyright (c) 2017 __MyCompanyName__. All rights reserved.
-update on 2019-07-18.
 """
 
 import sys
