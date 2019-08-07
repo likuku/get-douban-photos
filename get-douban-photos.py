@@ -183,7 +183,7 @@ def test(arg):
     print(_url_str)
     _str_album_num = _url_str.split('album/')[1].replace('/', '')
     make_db_for_work('photos_album_%s.sqlite3' % _str_album_num)
-    sys.exit()
+    # sys.exit()
     photo_url_list = get_list_url_str_photo(_url_str)
     photo_file_url_list = get_list_url_str_photo_file(photo_url_list)
     print(photo_url_list, len(photo_url_list), len(list(set(photo_url_list))))
