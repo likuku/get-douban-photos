@@ -33,6 +33,7 @@ def make_db_for_work(input_db_name):
         c.execute('''CREATE TABLE photos
                     (str_photo_page_url	TEXT NOT NULL UNIQUE,
                     str_photo_file_url	TEXT UNIQUE)''')
+        conn.commit()
         conn.close()
     except Exception as e:
         print('# Info: table %s.photos is existed' % _db_name)
