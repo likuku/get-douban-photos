@@ -12,6 +12,7 @@ import os
 import requests
 import random
 import time
+import sqlite3
 
 USER_AGENTS = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/20100101 Firefox/11.0',
                'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100 101 Firefox/22.0',
@@ -22,6 +23,20 @@ USER_AGENTS = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/2010
 # headers={'User-Agent': random.choice(USER_AGENTS)}
 
 list_url_str_photo = []
+
+
+def make_db_for_work(input_db_name):
+    _db_name = input_db_name
+    try:
+        conn = sqlite3.connect(_db_name)
+        c = conn.cursor()
+        c.execute('''CREATE TABLE photos
+                    (str_photo_page_url	TEXT NOT NULL UNIQUE,
+                    str_photo_file_url	TEXT UNIQUE)''')
+        conn.close()
+    except Exception as e:
+        print('# Info: table %s.photos is existed' % _db_name)
+        pass
 
 
 def make_dirs_for_work():
@@ -166,6 +181,9 @@ def test(arg):
     # _url_str = 'https://www.douban.com/photos/album/xxxx/'
     _url_str = sys.argv[1]
     print(_url_str)
+    _str_album_num = _url_str.split('album/')[1].replace('/', '')
+    make_db_for_work('photos_album_%s.sqlite3' % _str_album_num)
+    sys.exit()
     photo_url_list = get_list_url_str_photo(_url_str)
     photo_file_url_list = get_list_url_str_photo_file(photo_url_list)
     print(photo_url_list, len(photo_url_list), len(list(set(photo_url_list))))
