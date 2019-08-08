@@ -28,19 +28,23 @@ list_url_str_photo = []
 def is_this_photo_page_has_photo_file_url(input_db_conn, input_str_photo_page_url):
     _conn = input_db_conn
     try:
-        _cmd = "SELECT str_photo_file_url FROM photos WHERE str_photo_page_url IS '%s'" % (
+        _cmd = "SELECT str_photo_file_url FROM photos WHERE str_photo_page_url = '%s';" % (
             input_str_photo_page_url)
         _cur = _conn.cursor()
         _cur.execute(_cmd)
         _conn.commit()
-        print(_cmd)
-        print(_cur.fetchone())
-        if _cur.fetchone() is None:
+        print('')
+        print('New Cmd:', _cmd)
+        _r = _cur.fetchall()
+        # print(_r)
+        # print('type(_r): ', type(_r))
+        # print('len(_r): ', len(_r))
+        if len(_r) is 0:
             return(False)
         else:
             return(True)
     except Exception as e:
-        print(e, _cmd)
+        print('Error: ', e, _cmd)
         pass
 
 
@@ -262,9 +266,12 @@ def test(arg):
         _url = photo_url_list[_index]
         add_a_str_photo_page_url_into_db(_db_conn, _url)
     #
+    print(is_this_str_photo_page_url_in_db(_db_conn, 'https'))
     print(is_this_str_photo_page_url_in_db(_db_conn, 'https://www.douban.com/photos/photo/2454137304/'))
-    is_this_photo_page_has_photo_file_url(_db_conn, 'test')
-    is_this_photo_page_has_photo_file_url(_db_conn, 'https://www.douban.com/photos/photo/2499220532/')
+    # is_this_photo_page_has_photo_file_url(_db_conn, 'test')
+    # is_this_photo_page_has_photo_file_url(_db_conn, 'https://www.douban.com/photos/photo/2499220532/')
+    #print(is_this_photo_page_has_photo_file_url(_db_conn, 'test'))
+    #print(is_this_photo_page_has_photo_file_url(_db_conn, 'https://www.douban.com/photos/photo/2499220532/'))
     close_db_for_work(_db_conn)
     sys.exit()
     photo_file_url_list = get_list_url_str_photo_file(photo_url_list)
