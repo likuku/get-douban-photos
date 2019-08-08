@@ -33,10 +33,10 @@ def is_this_photo_page_has_photo_file_url(input_db_conn, input_str_photo_page_ur
         _cur = _conn.cursor()
         _cur.execute(_cmd)
         _conn.commit()
-        print('')
-        print('New Cmd:', _cmd)
+        # print('')
+        # print('New Cmd:', _cmd)
         _r = _cur.fetchall()
-        # print(_r)
+        # print('_r: ', _r)
         # print('type(_r): ', type(_r))
         # print('len(_r): ', len(_r))
         if len(_r) is 0:
@@ -56,8 +56,12 @@ def is_this_str_photo_page_url_in_db(input_db_conn, input_str_photo_page_url):
         _cur = _conn.cursor()
         _cur.execute(_cmd)
         _conn.commit()
-        # print(_cmd)
+        print(_cmd)
         # print(type(_cur.fetchone()[0]))
+        # _r = _cur.fetchone()
+        # print('_r: ', _r)
+        # print('type(_r)', type(_r))
+        print(_cur.fetchall())
         if _cur.fetchone()[0] is 0:
             return(False)
         else:
