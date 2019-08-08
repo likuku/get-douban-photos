@@ -56,12 +56,12 @@ def is_this_str_photo_page_url_in_db(input_db_conn, input_str_photo_page_url):
         _cur = _conn.cursor()
         _cur.execute(_cmd)
         _conn.commit()
-        if _cur.fetchone()[0] is 0:
-            return(True)
-        else:
-            return(False)
         # print(_cmd)
         # print(type(_cur.fetchone()[0]))
+        if _cur.fetchone()[0] is 0:
+            return(False)
+        else:
+            return(True)
     except Exception as e:
         print(e, _cmd)
         pass
@@ -270,8 +270,8 @@ def test(arg):
     print(is_this_str_photo_page_url_in_db(_db_conn, 'https://www.douban.com/photos/photo/2454137304/'))
     # is_this_photo_page_has_photo_file_url(_db_conn, 'test')
     # is_this_photo_page_has_photo_file_url(_db_conn, 'https://www.douban.com/photos/photo/2499220532/')
-    #print(is_this_photo_page_has_photo_file_url(_db_conn, 'test'))
-    #print(is_this_photo_page_has_photo_file_url(_db_conn, 'https://www.douban.com/photos/photo/2499220532/'))
+    print(is_this_photo_page_has_photo_file_url(_db_conn, 'test'))
+    print(is_this_photo_page_has_photo_file_url(_db_conn, 'https://www.douban.com/photos/photo/2499220532/'))
     close_db_for_work(_db_conn)
     sys.exit()
     photo_file_url_list = get_list_url_str_photo_file(photo_url_list)
