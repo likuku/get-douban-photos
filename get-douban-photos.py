@@ -61,7 +61,6 @@ def is_this_str_photo_page_url_in_db(input_db_conn, input_str_photo_page_url):
         # _r = _cur.fetchone()
         # print('_r: ', _r)
         # print('type(_r)', type(_r))
-        print(_cur.fetchall())
         if _cur.fetchone()[0] is 0:
             return(False)
         else:
