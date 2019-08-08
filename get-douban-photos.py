@@ -33,13 +33,14 @@ def is_this_photo_page_has_photo_file_url(input_db_conn, input_str_photo_page_ur
         _cur = _conn.cursor()
         _cur.execute(_cmd)
         _conn.commit()
-        print('')
-        print('New Cmd:', _cmd)
+        # print('')
+        # print('New Cmd:', _cmd)
         _r = _cur.fetchall()
         # print('_r: ', _r)
         # print('type(_r): ', type(_r))
+        # print('_r[0][0]: ', _r[0][0])
         # print('len(_r): ', len(_r))
-        if len(_r) is 0:
+        if _r[0][0] is None:
             return(False)
         else:
             return(True)
@@ -56,7 +57,7 @@ def is_this_str_photo_page_url_in_db(input_db_conn, input_str_photo_page_url):
         _cur = _conn.cursor()
         _cur.execute(_cmd)
         _conn.commit()
-        print(_cmd)
+        # print(_cmd)
         # print(type(_cur.fetchone()[0]))
         # _r = _cur.fetchone()
         # print('_r: ', _r)
@@ -176,18 +177,28 @@ def get_photo_from_list_url_str_photo_file(input_list_url_str_photo):
     # 2017-08-29>
 
 
-def get_list_url_str_photo_file(input_list_url_str_photo):
+def get_list_url_str_photo_file(input_list_url_str_photo, input_db_conn):
     pass
     # < 2017-08-29
     print('# make list for all photo file urls')
+    _db_conn = input_db_conn
     _list_url_photo_page = input_list_url_str_photo
     _list = []
     for _index in range(len(_list_url_photo_page)):
         pass
-        time.sleep(random.random())
-        _tmp_url = get_url_str_photo_file(_list_url_photo_page[_index])
-        print('# get photo url from: %s' % _list_url_photo_page[_index], end=' ')
-        _list.append(_tmp_url)
+        if is_this_photo_page_has_photo_file_url(
+                _db_conn,
+                _list_url_photo_page[_index]) is True:
+            print('# had photo url from: %s' % _list_url_photo_page[_index], end=' ')
+        else:
+            time.sleep(random.random())
+            _tmp_url = get_url_str_photo_file(_list_url_photo_page[_index])
+            print('# get photo url from: %s' % _list_url_photo_page[_index], end=' ')
+            _list.append(_tmp_url)
+            add_a_str_photo_file_url_into_db_for_a_photo_page_url(
+                    _db_conn,
+                    _list_url_photo_page[_index],
+                    _tmp_url)
         print('%9d/%d OK' % (_index+1, len(_list_url_photo_page)))
     return(_list)
     # 2017-08-29>
@@ -290,22 +301,24 @@ def test(arg):
         _url = photo_url_list[_index]
         add_a_str_photo_page_url_into_db(_db_conn, _url)
     #
-    print(is_this_str_photo_page_url_in_db(_db_conn, 'https'))
-    print(is_this_str_photo_page_url_in_db(_db_conn, 'https://www.douban.com/photos/photo/2454137304/'))
+    #print(is_this_str_photo_page_url_in_db(_db_conn, 'https'))
+    #print(is_this_str_photo_page_url_in_db(_db_conn, 'https://www.douban.com/photos/photo/2454137304/'))
     # is_this_photo_page_has_photo_file_url(_db_conn, 'test')
     # is_this_photo_page_has_photo_file_url(_db_conn, 'https://www.douban.com/photos/photo/2499220532/')
-    print(is_this_photo_page_has_photo_file_url(_db_conn, 'test'))
-    print(is_this_photo_page_has_photo_file_url(_db_conn, 'https://www.douban.com/photos/photo/2499220532/'))
-    add_a_str_photo_file_url_into_db_for_a_photo_page_url(
-        _db_conn,
-        'https://www.douban.com/photos/photo/2499220532/',
-        'https://images/test.jpg')
-    close_db_for_work(_db_conn)
-    sys.exit()
-    photo_file_url_list = get_list_url_str_photo_file(photo_url_list)
-    print(photo_url_list, len(photo_url_list), len(list(set(photo_url_list))))
+    #print(is_this_photo_page_has_photo_file_url(_db_conn, 'test'))
+    #print(is_this_photo_page_has_photo_file_url(_db_conn, 'https://www.douban.com/photos/photo/2499220532/'))
+    #add_a_str_photo_file_url_into_db_for_a_photo_page_url(
+    #    _db_conn,
+    #    'https://www.douban.com/photos/photo/2499220532/',
+    #    'https://images/test.jpg')
+    #close_db_for_work(_db_conn)
+    #sys.exit()
+    photo_file_url_list = get_list_url_str_photo_file(photo_url_list, _db_conn)
+    #print(photo_url_list, len(photo_url_list), len(list(set(photo_url_list))))
     print(photo_file_url_list,)
     get_photo_from_list_url_str_photo_file(photo_file_url_list)
+    close_db_for_work(_db_conn)
+    #
     sys.exit()
     try:
         pass
