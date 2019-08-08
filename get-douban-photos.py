@@ -70,6 +70,27 @@ def is_this_str_photo_page_url_in_db(input_db_conn, input_str_photo_page_url):
         pass
 
 
+def add_a_str_photo_file_url_into_db_for_a_photo_page_url(
+        input_db_conn,
+        input_str_photo_page_url,
+        input_str_photo_file_url):
+    _conn = input_db_conn
+    try:
+        _cmd = '''UPDATE photos
+                SET str_photo_file_url = "%s"
+                WHERE str_photo_page_url = "%s"
+                LIMIT 1''' % (
+                    input_str_photo_file_url,
+                    input_str_photo_page_url)
+        _cur = _conn.cursor()
+        _cur.execute(_cmd)
+        _conn.commit()
+        _cur.close()
+    except Exception as e:
+        print(e, _cmd)
+        pass
+
+
 def add_a_str_photo_page_url_into_db(input_db_conn, input_str_photo_page_url):
     _conn = input_db_conn
     try:
@@ -275,6 +296,10 @@ def test(arg):
     # is_this_photo_page_has_photo_file_url(_db_conn, 'https://www.douban.com/photos/photo/2499220532/')
     print(is_this_photo_page_has_photo_file_url(_db_conn, 'test'))
     print(is_this_photo_page_has_photo_file_url(_db_conn, 'https://www.douban.com/photos/photo/2499220532/'))
+    add_a_str_photo_file_url_into_db_for_a_photo_page_url(
+        _db_conn,
+        'https://www.douban.com/photos/photo/2499220532/',
+        'https://images/test.jpg')
     close_db_for_work(_db_conn)
     sys.exit()
     photo_file_url_list = get_list_url_str_photo_file(photo_url_list)
