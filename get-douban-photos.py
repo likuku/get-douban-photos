@@ -25,6 +25,57 @@ USER_AGENTS = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/2010
 list_url_str_photo = []
 
 
+def is_this_str_photo_page_url_in_db(input_db_conn, input_str_photo_page_url):
+    _conn = input_db_conn
+    try:
+        _cmd = "SELECT COUNT(*) FROM photos WHERE str_photo_page_url IS '%s'" % (
+            input_str_photo_page_url)
+        _cur = _conn.cursor()
+        _cur.execute(_cmd)
+        _conn.commit()
+        if _cur.fetchone()[0] is 0:
+            return(True)
+        else:
+            return(False)
+        # print(_cmd)
+        # print(type(_cur.fetchone()[0]))
+    except Exception as e:
+        print(e, _cmd)
+        pass
+
+
+def add_a_str_photo_page_url_into_db(input_db_conn, input_str_photo_page_url):
+    _conn = input_db_conn
+    try:
+        _cmd = "INSERT INTO photos('str_photo_page_url') values ('%s')" % (
+            input_str_photo_page_url)
+        _cur = _conn.cursor()
+        _cur.execute(_cmd)
+        _conn.commit()
+    except Exception as e:
+        print(e, _cmd)
+        pass
+
+
+def open_db_for_work(input_db_name):
+    _db_name = input_db_name
+    try:
+        conn = sqlite3.connect(_db_name)
+        return(conn)
+    except Exception as e:
+        print('# Error: can not open db: %s' % _db_name)
+        raise
+
+
+def close_db_for_work(input_db_conn):
+    _conn = input_db_conn
+    try:
+        _conn.close()
+    except Exception as e:
+        print('# Error: can not close db: %s' % _db_name)
+        raise
+
+
 def make_db_for_work(input_db_name):
     _db_name = input_db_name
     try:
@@ -32,7 +83,7 @@ def make_db_for_work(input_db_name):
         c = conn.cursor()
         c.execute('''CREATE TABLE photos
                     (str_photo_page_url	TEXT NOT NULL UNIQUE,
-                    str_photo_file_url	TEXT UNIQUE)''')
+                    str_photo_file_url UNIQUE)''')
         conn.commit()
         conn.close()
     except Exception as e:
@@ -184,8 +235,17 @@ def test(arg):
     print(_url_str)
     _str_album_num = _url_str.split('album/')[1].replace('/', '')
     make_db_for_work('photos_album_%s.sqlite3' % _str_album_num)
+    _db_conn = open_db_for_work('photos_album_%s.sqlite3' % _str_album_num)
     # sys.exit()
     photo_url_list = get_list_url_str_photo(_url_str)
+    #
+    for _index in list(range(len(photo_url_list))):
+        _url = photo_url_list[_index]
+        add_a_str_photo_page_url_into_db(_db_conn, _url)
+    #
+    print(is_this_str_photo_page_url_in_db(_db_conn, 'https://www.douban.com/photos/photo/2454137304/'))
+    close_db_for_work(_db_conn)
+    sys.exit()
     photo_file_url_list = get_list_url_str_photo_file(photo_url_list)
     print(photo_url_list, len(photo_url_list), len(list(set(photo_url_list))))
     print(photo_file_url_list,)
