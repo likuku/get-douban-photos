@@ -25,7 +25,9 @@ USER_AGENTS = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/2010
 list_url_str_photo = []
 
 
-def is_this_photo_page_has_photo_file_url(input_db_conn, input_str_photo_page_url):
+def get_str_photo_file_url_from_db_where_photo_page_url(
+        input_db_conn,
+        input_str_photo_page_url):
     _conn = input_db_conn
     try:
         _cmd = "SELECT str_photo_file_url FROM photos WHERE str_photo_page_url = '%s';" % (
@@ -40,10 +42,10 @@ def is_this_photo_page_has_photo_file_url(input_db_conn, input_str_photo_page_ur
         # print('type(_r): ', type(_r))
         # print('_r[0][0]: ', _r[0][0])
         # print('len(_r): ', len(_r))
-        if _r[0][0] is None:
-            return(False)
-        else:
-            return(True)
+        if len(_r) > 0:
+            return(_r[0][0])
+        elif len(_r) is 0:
+            return(None)
     except Exception as e:
         print('Error: ', e, _cmd)
         pass
@@ -186,9 +188,9 @@ def get_list_url_str_photo_file(input_list_url_str_photo, input_db_conn):
     _list = []
     for _index in range(len(_list_url_photo_page)):
         pass
-        if is_this_photo_page_has_photo_file_url(
+        if get_str_photo_file_url_from_db_where_photo_page_url(
                 _db_conn,
-                _list_url_photo_page[_index]) is True:
+                _list_url_photo_page[_index]) is not False:
             print('# had photo url from: %s' % _list_url_photo_page[_index], end=' ')
         else:
             time.sleep(random.random())
@@ -291,7 +293,7 @@ def test(arg):
     # _url_str = 'https://www.douban.com/photos/album/xxxx/'
     _url_str = sys.argv[1]
     print(_url_str)
-    '''
+    
     _str_album_num = _url_str.split('album/')[1].replace('/', '')
     make_db_for_work('photos_album_%s.sqlite3' % _str_album_num)
     _db_conn = open_db_for_work('photos_album_%s.sqlite3' % _str_album_num)
@@ -301,8 +303,10 @@ def test(arg):
     for _index in list(range(len(photo_url_list))):
         _url = photo_url_list[_index]
         add_a_str_photo_page_url_into_db(_db_conn, _url)
-    #
-    #print(is_this_str_photo_page_url_in_db(_db_conn, 'https'))
+    # 
+    _file_url = get_str_photo_file_url_from_db_where_photo_page_url(_db_conn, 'https://www.douban.com/photos/photo/2454137304/')
+    print('_file_url: ', _file_url)
+    sys.exit()
     #print(is_this_str_photo_page_url_in_db(_db_conn, 'https://www.douban.com/photos/photo/2454137304/'))
     # is_this_photo_page_has_photo_file_url(_db_conn, 'test')
     # is_this_photo_page_has_photo_file_url(_db_conn, 'https://www.douban.com/photos/photo/2499220532/')
@@ -319,7 +323,7 @@ def test(arg):
     print(photo_file_url_list,)
     get_photo_from_list_url_str_photo_file(photo_file_url_list)
     close_db_for_work(_db_conn)
-    '''
+    
     #
     # sys.exit()
     try:
@@ -361,9 +365,9 @@ def test(arg):
 
 def main():
     pass
-    #test('')
+    test('')
     #
-    #sys.exit()
+    sys.exit()
     #
     make_dirs_for_work()
     from pyquery import PyQuery as pyq
