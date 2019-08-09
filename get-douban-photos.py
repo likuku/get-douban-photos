@@ -291,6 +291,7 @@ def test(arg):
     # _url_str = 'https://www.douban.com/photos/album/xxxx/'
     _url_str = sys.argv[1]
     print(_url_str)
+    '''
     _str_album_num = _url_str.split('album/')[1].replace('/', '')
     make_db_for_work('photos_album_%s.sqlite3' % _str_album_num)
     _db_conn = open_db_for_work('photos_album_%s.sqlite3' % _str_album_num)
@@ -318,8 +319,9 @@ def test(arg):
     print(photo_file_url_list,)
     get_photo_from_list_url_str_photo_file(photo_file_url_list)
     close_db_for_work(_db_conn)
+    '''
     #
-    sys.exit()
+    # sys.exit()
     try:
         pass
         doc = pyq(url=_url_str)
@@ -359,8 +361,28 @@ def test(arg):
 
 def main():
     pass
+    #test('')
+    #
+    #sys.exit()
+    #
     make_dirs_for_work()
-    test('')
+    from pyquery import PyQuery as pyq
+    # _url_str = 'https://www.douban.com/photos/album/xxxx/'
+    _url_str = sys.argv[1]
+    print(_url_str)
+    _str_album_num = _url_str.split('album/')[1].replace('/', '')
+    make_db_for_work('photos_album_%s.sqlite3' % _str_album_num)
+    _db_conn = open_db_for_work('photos_album_%s.sqlite3' % _str_album_num)
+    photo_url_list = get_list_url_str_photo(_url_str)
+    for _index in list(range(len(photo_url_list))):
+        _url = photo_url_list[_index]
+        add_a_str_photo_page_url_into_db(_db_conn, _url)
+    photo_file_url_list = get_list_url_str_photo_file(photo_url_list, _db_conn)
+    #print(photo_url_list, len(photo_url_list), len(list(set(photo_url_list))))
+    print(photo_file_url_list,)
+    get_photo_from_list_url_str_photo_file(photo_file_url_list)
+    close_db_for_work(_db_conn)
+
 
 if __name__ == '__main__':
     main()
