@@ -188,9 +188,11 @@ def get_list_url_str_photo_file(input_list_url_str_photo, input_db_conn):
     _list = []
     for _index in range(len(_list_url_photo_page)):
         pass
-        if get_str_photo_file_url_from_db_where_photo_page_url(
-                _db_conn,
-                _list_url_photo_page[_index]) is not False:
+        _tmp_url_in_db = get_str_photo_file_url_from_db_where_photo_page_url(
+            _db_conn,
+            _list_url_photo_page[_index])
+        if _tmp_url_in_db is not None:
+            _list.append(_tmp_url_in_db)
             print('# had photo url from: %s' % _list_url_photo_page[_index], end=' ')
         else:
             time.sleep(random.random())
@@ -293,7 +295,7 @@ def test(arg):
     # _url_str = 'https://www.douban.com/photos/album/xxxx/'
     _url_str = sys.argv[1]
     print(_url_str)
-    
+    #
     _str_album_num = _url_str.split('album/')[1].replace('/', '')
     make_db_for_work('photos_album_%s.sqlite3' % _str_album_num)
     _db_conn = open_db_for_work('photos_album_%s.sqlite3' % _str_album_num)
@@ -304,9 +306,9 @@ def test(arg):
         _url = photo_url_list[_index]
         add_a_str_photo_page_url_into_db(_db_conn, _url)
     # 
-    _file_url = get_str_photo_file_url_from_db_where_photo_page_url(_db_conn, 'https://www.douban.com/photos/photo/2454137304/')
-    print('_file_url: ', _file_url)
-    sys.exit()
+    # _file_url = get_str_photo_file_url_from_db_where_photo_page_url(_db_conn, 'https://www.douban.com/photos/photo/2454137304/')
+    # print('_file_url: ', _file_url)
+    # sys.exit()
     #print(is_this_str_photo_page_url_in_db(_db_conn, 'https://www.douban.com/photos/photo/2454137304/'))
     # is_this_photo_page_has_photo_file_url(_db_conn, 'test')
     # is_this_photo_page_has_photo_file_url(_db_conn, 'https://www.douban.com/photos/photo/2499220532/')
@@ -365,9 +367,9 @@ def test(arg):
 
 def main():
     pass
-    test('')
+    # test('')
     #
-    sys.exit()
+    # sys.exit()
     #
     make_dirs_for_work()
     from pyquery import PyQuery as pyq
