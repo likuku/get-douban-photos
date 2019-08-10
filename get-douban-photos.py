@@ -333,6 +333,9 @@ def test(arg):
         doc = pyq(url=_url_str)
         print('test')
         print(doc('head').find('title').text())
+        #
+        print('album-page.class-description: ', doc('.description').text())
+        #
         print(doc('.next')('a').attr('href'))
         # print(doc('.photo_wrap')('.photolst_photo'))
         # < 2017-08-23
@@ -349,6 +352,9 @@ def test(arg):
         _doc_photo_page = pyq(url=_url_str_photo_page)
         _url_str_photo_main = _doc_photo_page('.mainphoto')('img').attr('src')
         _url_str_photo_large = _doc_photo_page('.photo-edit')('a').attr('href')
+        #
+        print('photo-page.copyright-upload: ', _doc_photo_page('.copyright-claim').text())
+        print('photo-page.photo_descri: ', _doc_photo_page('.photo_descri').text())
         #
         print('main_photo:', _url_str_photo_main)
         print('large_photo_url:', _url_str_photo_large)
