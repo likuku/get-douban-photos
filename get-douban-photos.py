@@ -103,6 +103,7 @@ def add_a_str_photo_page_url_into_db(input_db_conn, input_str_photo_page_url):
         _cur = _conn.cursor()
         _cur.execute(_cmd)
         _conn.commit()
+        upgrade_str_sys_update_into_db(_conn, input_str_photo_page_url)
     except Exception as e:
         print(e, _cmd)
         pass
