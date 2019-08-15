@@ -13,6 +13,7 @@ import requests
 import random
 import time
 import sqlite3
+import datetime
 
 USER_AGENTS = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/20100101 Firefox/11.0',
                'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100 101 Firefox/22.0',
@@ -98,6 +99,26 @@ def add_a_str_photo_page_url_into_db(input_db_conn, input_str_photo_page_url):
     _conn = input_db_conn
     try:
         _cmd = "INSERT INTO photos('str_photo_page_url') values ('%s')" % (
+            input_str_photo_page_url)
+        _cur = _conn.cursor()
+        _cur.execute(_cmd)
+        _conn.commit()
+    except Exception as e:
+        print(e, _cmd)
+        pass
+
+
+def upgrade_str_sys_update_into_db(input_db_conn, input_str_photo_page_url):
+    _conn = input_db_conn
+    _str_timestamp = datetime.datetime.now().isoformat(
+                                                ' ',
+                                                timespec='milliseconds')
+    try:
+        _cmd = '''UPDATE photos
+                SET str_sys_update = "%s"
+                WHERE str_photo_page_url = "%s"
+                LIMIT 1''' % (
+            _str_timestamp,
             input_str_photo_page_url)
         _cur = _conn.cursor()
         _cur.execute(_cmd)
