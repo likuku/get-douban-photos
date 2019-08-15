@@ -26,6 +26,70 @@ USER_AGENTS = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/2010
 list_url_str_photo = []
 
 
+def upgrade_photo_page_info_in_db(
+        input_db_conn,
+        input_str_photo_page_url,
+        input_str_photo_page_photo_descri,
+        input_str_photo_page_copyright_upload):
+    _conn = input_db_conn
+    try:
+        _cmd = '''UPDATE photos SET
+                str_photo_descri = "%s",
+                str_copyright_upload = "%s"
+                WHERE str_photo_page_url = "%s"
+                LIMIT 1''' % (
+            input_str_photo_page_photo_descri,
+            input_str_photo_page_copyright_upload,
+            input_str_photo_page_url)
+        _cur = _conn.cursor()
+        _cur.execute(_cmd)
+        _conn.commit()
+        upgrade_str_sys_update_into_db(_conn, input_str_photo_page_url)
+    except Exception as e:
+        print(e, _cmd)
+        pass    
+
+
+def get_dict_photo_page_info_in_db(
+        input_db_conn,
+        input_str_photo_page_url):
+    _conn = input_db_conn
+    _dict = {}
+    try:
+        _cmd = '''SELECT
+                str_photo_page_url,
+                str_photo_file_url,
+                str_photo_descri,
+                str_copyright_upload,
+                str_sys_update
+                FROM photos
+                WHERE str_photo_page_url = "%s"
+                LIMIT 1''' % (
+            input_str_photo_page_url)
+        _cur = _conn.cursor()
+        _cur.execute(_cmd)
+        _conn.commit()
+        # print('')
+        # print('New Cmd:', _cmd)
+        _r = _cur.fetchall()
+        # print('_r: ', _r)
+        # print('type(_r): ', type(_r))
+        # print('_r[0][0]: ', _r[0][0])
+        # print('len(_r): ', len(_r))
+        if len(_r) > 0:
+            _dict['str_photo_page_url'] = _r[0][0]
+            _dict['str_photo_file_url'] = _r[0][1]
+            _dict['str_photo_descri'] = _r[0][2]
+            _dict['str_copyright_upload'] = _r[0][3]
+            _dict['str_sys_update'] = _r[0][4]
+            # print('_dict: ',_dict)
+            return(_dict)
+        elif len(_r) is 0:
+            return(None)
+    except Exception as e:
+        print('Error: ', e, _cmd)
+        pass
+
 def get_str_photo_file_url_from_db_where_photo_page_url(
         input_db_conn,
         input_str_photo_page_url):
@@ -222,7 +286,7 @@ def get_list_url_str_photo_file(input_list_url_str_photo, input_db_conn):
             print('# had photo url from: %s' % _list_url_photo_page[_index], end=' ')
         else:
             time.sleep(random.random())
-            _tmp_url = get_url_str_photo_file(_list_url_photo_page[_index])
+            _tmp_url = get_url_str_photo_file(_list_url_photo_page[_index], _db_conn)
             print('# get photo url from: %s' % _list_url_photo_page[_index], end=' ')
             _list.append(_tmp_url)
             add_a_str_photo_file_url_into_db_for_a_photo_page_url(
@@ -234,8 +298,9 @@ def get_list_url_str_photo_file(input_list_url_str_photo, input_db_conn):
     # 2017-08-29>
 
 
-def get_url_str_photo_file(input_photo_url):
+def get_url_str_photo_file(input_photo_url, input_db_conn):
     pass
+    _db_conn = input_db_conn
     # <2017-08-27
     from pyquery import PyQuery as pyq
     _url_str = input_photo_url
@@ -265,6 +330,24 @@ def get_url_str_photo_file(input_photo_url):
         # update work db
         _str_photo_page_copyright_upload = _doc_photo_page('.copyright-claim').text()
         _str_photo_page_photo_descri = _doc_photo_page('.photo_descri').text()
+        if len(_str_photo_page_photo_descri) is 0:
+            _str_photo_page_photo_descri = None
+        else:
+            pass
+        _dict_old_photo_page_info_in_db = get_dict_photo_page_info_in_db(
+                                            _db_conn,
+                                            input_photo_url)
+        if ((_dict_old_photo_page_info_in_db['str_photo_descri'] is
+                _str_photo_page_photo_descri) and
+                (_dict_old_photo_page_info_in_db['str_copyright_upload'] is
+                    _str_photo_page_copyright_upload)):
+            pass
+        else:
+            upgrade_photo_page_info_in_db(
+                _db_conn,
+                input_photo_url,
+                _str_photo_page_photo_descri,
+                _str_photo_page_copyright_upload)
     except Exception as e:
         raise
         pass
@@ -347,8 +430,11 @@ def test(arg):
     #    _db_conn,
     #    'https://www.douban.com/photos/photo/2499220532/',
     #    'https://images/test.jpg')
-    #close_db_for_work(_db_conn)
-    #sys.exit()
+    _dict = get_dict_photo_page_info_in_db(_db_conn,'https://www.douban.com/photos/photo/2499220532/')
+    print(_dict)
+    print('type(str_photo_descri): ', type(_dict['str_photo_descri']))
+    close_db_for_work(_db_conn)
+    sys.exit()
     photo_file_url_list = get_list_url_str_photo_file(photo_url_list, _db_conn)
     #print(photo_url_list, len(photo_url_list), len(list(set(photo_url_list))))
     print(photo_file_url_list,)
@@ -384,6 +470,8 @@ def test(arg):
         #
         print('photo-page.copyright-upload: ', _doc_photo_page('.copyright-claim').text())
         print('photo-page.photo_descri: ', _doc_photo_page('.photo_descri').text())
+        print('len(photo-page.photo_descri): ', len(_doc_photo_page('.photo_descri').text()))
+        print('type(photo-page.photo_descri): ', type(_doc_photo_page('.photo_descri').text()))
         #
         print('main_photo:', _url_str_photo_main)
         print('large_photo_url:', _url_str_photo_large)
