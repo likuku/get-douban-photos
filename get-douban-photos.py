@@ -262,6 +262,9 @@ def get_url_str_photo_file(input_photo_url):
         else:
             _url_str_photo_main = _doc_photo_page('.mainphoto')('img').attr('src')
             _url_str_photo_file = _url_str_photo_main
+        # update work db
+        _str_photo_page_copyright_upload = _doc_photo_page('.copyright-claim').text()
+        _str_photo_page_photo_descri = _doc_photo_page('.photo_descri').text()
     except Exception as e:
         raise
         pass
