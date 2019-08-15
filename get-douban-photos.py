@@ -55,7 +55,7 @@ def get_str_photo_file_url_from_db_where_photo_page_url(
 def is_this_str_photo_page_url_in_db(input_db_conn, input_str_photo_page_url):
     _conn = input_db_conn
     try:
-        _cmd = "SELECT COUNT(*) FROM photos WHERE str_photo_page_url IS '%s'" % (
+        _cmd = "SELECT COUNT(*) FROM photos WHERE str_photo_page_url = '%s'" % (
             input_str_photo_page_url)
         _cur = _conn.cursor()
         _cur.execute(_cmd)
