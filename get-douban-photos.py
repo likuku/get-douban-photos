@@ -133,7 +133,10 @@ def make_db_for_work(input_db_name):
         c = conn.cursor()
         c.execute('''CREATE TABLE photos
                     (str_photo_page_url	TEXT NOT NULL UNIQUE,
-                    str_photo_file_url UNIQUE)''')
+                    str_photo_file_url TEXT UNIQUE,
+                    str_photo_descri TEXT,
+                    str_copyright_upload TEXT,
+                    str_sys_update TEXT)''')
         conn.commit()
         conn.close()
     except Exception as e:
