@@ -53,7 +53,7 @@ def upgrade_photo_page_info_in_db(
         upgrade_str_sys_update_into_db(_conn, input_str_photo_page_url)
     except Exception as e:
         print(e, _cmd)
-        pass    
+        pass
 
 
 def get_dict_photo_page_info_in_db(
@@ -95,6 +95,7 @@ def get_dict_photo_page_info_in_db(
     except Exception as e:
         print('Error: ', e, _cmd)
         pass
+
 
 def get_str_photo_file_url_from_db_where_photo_page_url(
         input_db_conn,
