@@ -26,6 +26,11 @@ HEADERS = {'User-Agent': random.choice(USER_AGENTS)}
 list_url_str_photo = []
 
 
+def sleep_random_time():
+    _time = random.choice((1, 2, 3, 4, 5, 6, 7, 8, 9)) + random.random()
+    time.sleep(_time)
+
+
 def upgrade_photo_page_info_in_db(
         input_db_conn,
         input_str_photo_page_url,
