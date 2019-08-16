@@ -67,7 +67,8 @@ def get_dict_photo_page_info_in_db(
                 str_photo_file_url,
                 str_photo_descri,
                 str_copyright_upload,
-                str_sys_update
+                str_sys_update,
+                str_photo_commits
                 FROM photos
                 WHERE str_photo_page_url = "%s"
                 LIMIT 1''' % (
@@ -88,6 +89,7 @@ def get_dict_photo_page_info_in_db(
             _dict['str_photo_descri'] = _r[0][2]
             _dict['str_copyright_upload'] = _r[0][3]
             _dict['str_sys_update'] = _r[0][4]
+            _dict['str_photo_commits'] = _r[0][5]
             # print('_dict: ',_dict)
             return(_dict)
         elif len(_r) is 0:
