@@ -21,7 +21,7 @@ USER_AGENTS = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/2010
                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_4) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.46 Safari/536.5',
                'Mozilla/5.0 (Windows; Windows NT 6.1) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.46 Safari/536.5',
                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',)
-# headers={'User-Agent': random.choice(USER_AGENTS)}
+HEADERS = {'User-Agent': random.choice(USER_AGENTS)}
 
 list_url_str_photo = []
 
@@ -256,7 +256,7 @@ def get_photo_from_list_url_str_photo_file(input_list_url_str_photo):
                 _img_name_str = _url_str.rsplit('/', 1)[1]
                 if os.path.isfile('images/%s' % _img_name_str) is False:
                     print('Download: %s' % _url_str, end=' ')
-                    _response = requests.get(_url_str, headers={'User-Agent': random.choice(USER_AGENTS)})
+                    _response = requests.get(_url_str, headers=HEADERS)
                     # print(_response.headers)
                     if _response.status_code == requests.codes.ok:
                         open('images/%s' % _img_name_str, 'wb').write(_response.content)
@@ -310,7 +310,7 @@ def get_url_str_photo_file(input_photo_url, input_db_conn):
     try:
         pass
         # <2017-08-29
-        _response = requests.get(_url_str, headers={'User-Agent': random.choice(USER_AGENTS)})
+        _response = requests.get(_url_str, headers=HEADERS)
         _html = _response.content
         _doc_photo_page = pyq(_html)
         # 2017-08-29>
@@ -318,7 +318,7 @@ def get_url_str_photo_file(input_photo_url, input_db_conn):
         if _url_str_photo_large is not None:
             pass
             # <2017-08-29
-            _response = requests.get(_url_str_photo_large, headers={'User-Agent': random.choice(USER_AGENTS)})
+            _response = requests.get(_url_str_photo_large, headers=HEADERS)
             _html = _response.content
             _doc_photo_large = pyq(_html)
             # 2017-08-29>
@@ -367,7 +367,7 @@ def get_list_url_str_photo(input_album_url):
     try:
         pass
         # <2017-08-29
-        _response = requests.get(_url_str, headers={'User-Agent': random.choice(USER_AGENTS)})
+        _response = requests.get(_url_str, headers=HEADERS)
         _html = _response.content
         _doc_photo_page = pyq(_html)
         # 2017-08-29>
