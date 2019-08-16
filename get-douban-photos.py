@@ -290,7 +290,7 @@ def get_list_url_str_photo_file(input_list_url_str_photo, input_db_conn):
             _list.append(_tmp_url_in_db)
             print('# had photo url from: %s' % _list_url_photo_page[_index], end=' ')
         else:
-            time.sleep(random.random())
+            # time.sleep(random.random())
             _tmp_url = get_url_str_photo_file(_list_url_photo_page[_index], _db_conn)
             print('# get photo url from: %s' % _list_url_photo_page[_index], end=' ')
             _list.append(_tmp_url)
@@ -395,7 +395,7 @@ def get_list_url_str_photo(input_album_url):
             # <2017-08-29
             # print('_url_str_next_page in while:',_url_str_next_page)
             # print('_count_key:',_url_str_next_page.find('type=rec'))
-            time.sleep(random.random())
+            # time.sleep(random.random())
             # 2017-08-29 >
             get_list_url_str_photo(_url_str_next_page)
         # return(_list_url_str_photo)
