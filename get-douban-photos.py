@@ -483,6 +483,7 @@ def test(arg):
         print('photo-page.photo_descri: ', _doc_photo_page('.photo_descri').text())
         print('len(photo-page.photo_descri): ', len(_doc_photo_page('.photo_descri').text()))
         print('type(photo-page.photo_descri): ', type(_doc_photo_page('.photo_descri').text()))
+        print('photo-page.comments: ',_doc_photo_page('script').text())
         #
         print('main_photo:', _url_str_photo_main)
         print('large_photo_url:', _url_str_photo_large)
