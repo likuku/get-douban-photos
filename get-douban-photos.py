@@ -27,10 +27,9 @@ list_url_str_photo = []
 
 
 def sleep_random_time():
-    _time = random.choice((1, 2, 3, 4, 5)) + random.random()
-    print('# sleep for time: %s' % _time, end=' ')
+    _time = random.choice((1, 2, 3)) + random.random()
+    # print('# sleep %s sec:' % _time)
     time.sleep(_time)
-    print(' OK')
 
 
 def upgrade_photo_page_info_in_db(
