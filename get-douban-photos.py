@@ -36,15 +36,18 @@ def upgrade_photo_page_info_in_db(
         input_db_conn,
         input_str_photo_page_url,
         input_str_photo_page_photo_descri,
-        input_str_photo_page_copyright_upload):
+        input_str_photo_page_copyright_upload,
+        input_str_photo_page_commits):
     _conn = input_db_conn
     try:
         _cmd = '''UPDATE photos SET
                 str_photo_descri = "%s",
+                str_photo_commits = "%s",
                 str_copyright_upload = "%s"
                 WHERE str_photo_page_url = "%s"
                 LIMIT 1''' % (
             input_str_photo_page_photo_descri,
+            input_str_photo_page_commits,
             input_str_photo_page_copyright_upload,
             input_str_photo_page_url)
         _cur = _conn.cursor()
