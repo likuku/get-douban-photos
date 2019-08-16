@@ -27,8 +27,10 @@ list_url_str_photo = []
 
 
 def sleep_random_time():
-    _time = random.choice((1, 2, 3, 4, 5, 6, 7, 8, 9)) + random.random()
+    _time = random.choice((1, 2, 3, 4, 5)) + random.random()
+    print('# sleep for time: %s' % _time, end=' ')
     time.sleep(_time)
+    print(' OK')
 
 
 def upgrade_photo_page_info_in_db(
@@ -261,6 +263,7 @@ def get_photo_from_list_url_str_photo_file(input_list_url_str_photo):
                 _img_name_str = _url_str.rsplit('/', 1)[1]
                 if os.path.isfile('images/%s' % _img_name_str) is False:
                     print('Download: %s' % _url_str, end=' ')
+                    sleep_random_time()
                     _response = requests.get(_url_str, headers=HEADERS)
                     # print(_response.headers)
                     if _response.status_code == requests.codes.ok:
@@ -315,6 +318,7 @@ def get_url_str_photo_file(input_photo_url, input_db_conn):
     try:
         pass
         # <2017-08-29
+        sleep_random_time()
         _response = requests.get(_url_str, headers=HEADERS)
         _html = _response.content
         _doc_photo_page = pyq(_html)
@@ -323,6 +327,7 @@ def get_url_str_photo_file(input_photo_url, input_db_conn):
         if _url_str_photo_large is not None:
             pass
             # <2017-08-29
+            sleep_random_time()
             _response = requests.get(_url_str_photo_large, headers=HEADERS)
             _html = _response.content
             _doc_photo_large = pyq(_html)
@@ -372,6 +377,7 @@ def get_list_url_str_photo(input_album_url):
     try:
         pass
         # <2017-08-29
+        sleep_random_time()
         _response = requests.get(_url_str, headers=HEADERS)
         _html = _response.content
         _doc_photo_page = pyq(_html)
