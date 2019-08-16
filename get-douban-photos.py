@@ -346,8 +346,14 @@ def get_url_str_photo_file(input_photo_url, input_db_conn):
         # update work db
         _str_photo_page_copyright_upload = _doc_photo_page('.copyright-claim').text()
         _str_photo_page_photo_descri = _doc_photo_page('.photo_descri').text()
+        _str_photo_page_commits = _doc_photo_page('script').text()
+        _num_total_of_photo_page_commits = int(_str_photo_page_commits.rsplit('\'total\'')[1].split(',')[0])
         if len(_str_photo_page_photo_descri) is 0:
             _str_photo_page_photo_descri = None
+        else:
+            pass
+        if _num_total_of_photo_page_commits is 0:
+            _str_photo_page_commits = None
         else:
             pass
         _dict_old_photo_page_info_in_db = get_dict_photo_page_info_in_db(
@@ -356,14 +362,17 @@ def get_url_str_photo_file(input_photo_url, input_db_conn):
         if ((_dict_old_photo_page_info_in_db['str_photo_descri'] is
                 _str_photo_page_photo_descri) and
                 (_dict_old_photo_page_info_in_db['str_copyright_upload'] is
-                    _str_photo_page_copyright_upload)):
+                    _str_photo_page_copyright_upload) and
+                    (_dict_old_photo_page_info_in_db['str_photo_page_commits'] is
+                        _str_photo_page_commits)):
             pass
         else:
             upgrade_photo_page_info_in_db(
                 _db_conn,
                 input_photo_url,
                 _str_photo_page_photo_descri,
-                _str_photo_page_copyright_upload)
+                _str_photo_page_copyright_upload,
+                _str_photo_page_commits)
     except Exception as e:
         raise
         pass
@@ -489,7 +498,7 @@ def test(arg):
         print('photo-page.photo_descri: ', _doc_photo_page('.photo_descri').text())
         print('len(photo-page.photo_descri): ', len(_doc_photo_page('.photo_descri').text()))
         print('type(photo-page.photo_descri): ', type(_doc_photo_page('.photo_descri').text()))
-        print('photo-page.comments: ',_doc_photo_page('script').text())
+        print('photo-page.comments: ', _doc_photo_page('script').text().rsplit('\'total\'')[1].split(',')[0])
         #
         print('main_photo:', _url_str_photo_main)
         print('large_photo_url:', _url_str_photo_large)
@@ -508,8 +517,8 @@ def test(arg):
 
 def main():
     pass
-    # test('')
-    # sys.exit()
+    test('')
+    sys.exit()
     #
     make_dirs_for_work()
     from pyquery import PyQuery as pyq
