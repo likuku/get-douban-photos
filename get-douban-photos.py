@@ -44,7 +44,8 @@ def upgrade_photo_page_info_in_db(
         _photo_page_commits = None
     else:
         _photo_page_commits = base64.encodebytes(
-            input_str_photo_page_commits.encode('utf-8'))
+            input_str_photo_page_commits.encode('utf-8')
+            ).decode('ascii')
     try:
         _cmd = '''UPDATE photos SET
                 str_photo_descri = "%s",
@@ -88,7 +89,8 @@ def get_dict_photo_page_info_in_db(
         # print('')
         # print('New Cmd:', _cmd)
         _r = _cur.fetchall()
-        # print('_r: ', _r)
+        #print('_r: ', _r)
+        print('type(_r[0][5]): ', type(_r[0][5].encode('utf-8')))
         # print('type(_r): ', type(_r))
         # print('_r[0][0]: ', _r[0][0])
         # print('len(_r): ', len(_r))
@@ -98,8 +100,12 @@ def get_dict_photo_page_info_in_db(
             _dict['str_photo_descri'] = _r[0][2]
             _dict['str_copyright_upload'] = _r[0][3]
             _dict['str_sys_update'] = _r[0][4]
-            _dict['str_photo_commits'] = _r[0][5]
-            # print('_dict: ',_dict)
+            if _r[0][5] is None:
+                _dict['str_photo_commits'] = _r[0][5]
+            else:
+                _dict['str_photo_commits'] = base64.decodestring(_r[0][5].decode('utf-8'))
+                #.decode('utf-8')
+            #print('_dict: ', _dict)
             return(_dict)
         elif len(_r) is 0:
             return(None)
@@ -440,7 +446,7 @@ def test(arg):
     _url_str = sys.argv[1]
     print(_url_str)
     #
-    '''
+    #'''
     _str_album_num = _url_str.split('album/')[1].replace('/', '')
     make_db_for_work('photos_album_%s.sqlite3' % _str_album_num)
     _db_conn = open_db_for_work('photos_album_%s.sqlite3' % _str_album_num)
@@ -462,9 +468,14 @@ def test(arg):
     #    _db_conn,
     #    'https://www.douban.com/photos/photo/2499220532/',
     #    'https://images/test.jpg')
-    _dict = get_dict_photo_page_info_in_db(_db_conn,'https://www.douban.com/photos/photo/2499220532/')
-    print(_dict)
-    print('type(str_photo_descri): ', type(_dict['str_photo_descri']))
+    for _photo_page in (
+                'https://www.douban.com/photos/photo/166338218/',
+                'https://www.douban.com/photos/photo/166338221/',
+                'https://www.douban.com/photos/photo/166338502/',
+                'https://www.douban.com/photos/photo/166338518/'):
+        _dict = get_dict_photo_page_info_in_db(_db_conn, _photo_page)
+        print(_dict)
+    #print('type(str_photo_descri): ', type(_dict['str_photo_descri']))
     close_db_for_work(_db_conn)
     sys.exit()
     photo_file_url_list = get_list_url_str_photo_file(photo_url_list, _db_conn)
@@ -474,7 +485,7 @@ def test(arg):
     close_db_for_work(_db_conn)
     #
     # sys.exit()
-    '''
+    #'''
     try:
         pass
         doc = pyq(url=_url_str)
@@ -523,8 +534,8 @@ def test(arg):
 
 def main():
     pass
-    # test('')
-    # sys.exit()
+    test('')
+    sys.exit()
     #
     make_dirs_for_work()
     from pyquery import PyQuery as pyq
