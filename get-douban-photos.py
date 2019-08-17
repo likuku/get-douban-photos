@@ -90,7 +90,7 @@ def get_dict_photo_page_info_in_db(
         # print('New Cmd:', _cmd)
         _r = _cur.fetchall()
         #print('_r: ', _r)
-        print('type(_r[0][5]): ', type(_r[0][5].encode('utf-8')))
+        #print('type(_r[0][5]): ', type(_r[0][5].encode('utf-8')))
         # print('type(_r): ', type(_r))
         # print('_r[0][0]: ', _r[0][0])
         # print('len(_r): ', len(_r))
@@ -103,7 +103,8 @@ def get_dict_photo_page_info_in_db(
             if _r[0][5] is None:
                 _dict['str_photo_commits'] = _r[0][5]
             else:
-                _dict['str_photo_commits'] = base64.decodestring(_r[0][5].decode('utf-8'))
+                _dict['str_photo_commits'] = base64.decodebytes(
+                    _r[0][5].encode('ascii')).decode('utf8')
                 #.decode('utf-8')
             #print('_dict: ', _dict)
             return(_dict)
