@@ -100,8 +100,8 @@ def get_dict_photo_page_info_in_db(
             _dict['str_photo_descri'] = _r[0][2]
             _dict['str_copyright_upload'] = _r[0][3]
             _dict['str_sys_update'] = _r[0][4]
-            if _r[0][5] == 'None':
-                # did not use: is 'None'. Aug18,2019
+            if _r[0][5] == 'None' or _r[0][5] is None:
+                # maybe some time is NoneType, some time is str None
                 _dict['str_photo_commits'] = None
             else:
                 _dict['str_photo_commits'] = base64.decodebytes(
