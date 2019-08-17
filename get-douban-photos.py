@@ -14,6 +14,7 @@ import random
 import time
 import sqlite3
 import datetime
+import base64
 
 USER_AGENTS = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/20100101 Firefox/11.0',
                'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100 101 Firefox/22.0',
@@ -39,6 +40,11 @@ def upgrade_photo_page_info_in_db(
         input_str_photo_page_copyright_upload,
         input_str_photo_page_commits):
     _conn = input_db_conn
+    if input_str_photo_page_commits is None:
+        _photo_page_commits = None
+    else:
+        _photo_page_commits = base64.encodebytes(
+            input_str_photo_page_commits.encode('utf-8'))
     try:
         _cmd = '''UPDATE photos SET
                 str_photo_descri = "%s",
@@ -47,7 +53,7 @@ def upgrade_photo_page_info_in_db(
                 WHERE str_photo_page_url = "%s"
                 LIMIT 1''' % (
             input_str_photo_page_photo_descri,
-            input_str_photo_page_commits,
+            _photo_page_commits,
             input_str_photo_page_copyright_upload,
             input_str_photo_page_url)
         _cur = _conn.cursor()
@@ -347,7 +353,7 @@ def get_url_str_photo_file(input_photo_url, input_db_conn):
         _str_photo_page_copyright_upload = _doc_photo_page('.copyright-claim').text()
         _str_photo_page_photo_descri = _doc_photo_page('.photo_descri').text()
         _str_photo_page_commits = _doc_photo_page('script').text()
-        _num_total_of_photo_page_commits = int(_str_photo_page_commits.rsplit('\'total\'')[1].split(',')[0])
+        _num_total_of_photo_page_commits = int(_str_photo_page_commits.rsplit('\'total\':')[1].split(',')[0])
         if len(_str_photo_page_photo_descri) is 0:
             _str_photo_page_photo_descri = None
         else:
@@ -517,8 +523,8 @@ def test(arg):
 
 def main():
     pass
-    test('')
-    sys.exit()
+    # test('')
+    # sys.exit()
     #
     make_dirs_for_work()
     from pyquery import PyQuery as pyq
