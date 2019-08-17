@@ -534,8 +534,8 @@ def test(arg):
 
 def main():
     pass
-    test('')
-    sys.exit()
+    # test('')
+    # sys.exit()
     #
     make_dirs_for_work()
     from pyquery import PyQuery as pyq
