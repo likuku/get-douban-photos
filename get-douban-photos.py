@@ -388,7 +388,7 @@ def get_url_str_photo_file(input_photo_url, input_db_conn):
     except Exception as e:
         raise
         pass
-        _url_str_photo_file is None
+        _url_str_photo_file = None
     return(_url_str_photo_file)
     # 2017-08-27 >
 
