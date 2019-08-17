@@ -44,7 +44,7 @@ def upgrade_photo_page_info_in_db(
         _photo_page_commits = None
     else:
         _photo_page_commits = base64.encodebytes(
-            input_str_photo_page_commits.encode('utf-8')
+            input_str_photo_page_commits.encode('utf8')
             ).decode('ascii')
     try:
         _cmd = '''UPDATE photos SET
