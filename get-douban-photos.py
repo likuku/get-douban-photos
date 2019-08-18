@@ -72,6 +72,8 @@ def upgrade_photo_page_info_in_db(
     _conn = input_db_conn
     _photo_page_commits = make_str_ascii_base64_from_raw_data(
                             input_str_photo_page_commits)
+    _photo_descri = make_str_ascii_base64_from_raw_data(
+                        input_str_photo_page_photo_descri)
     try:
         _cmd = '''UPDATE photos SET
                 str_photo_descri = "%s",
@@ -79,7 +81,7 @@ def upgrade_photo_page_info_in_db(
                 str_copyright_upload = "%s"
                 WHERE str_photo_page_url = "%s"
                 LIMIT 1''' % (
-            input_str_photo_page_photo_descri,
+            _photo_descri,
             _photo_page_commits,
             input_str_photo_page_copyright_upload,
             input_str_photo_page_url)
@@ -123,15 +125,12 @@ def get_dict_photo_page_info_in_db(
         if len(_r) > 0:
             _dict['str_photo_page_url'] = _r[0][0]
             _dict['str_photo_file_url'] = _r[0][1]
-            _dict['str_photo_descri'] = _r[0][2]
+            _dict['str_photo_descri'] = (
+                make_raw_data_from_str_ascii_base64(_r[0][2]))
             _dict['str_copyright_upload'] = _r[0][3]
             _dict['str_sys_update'] = _r[0][4]
-            if _r[0][5] == 'None' or _r[0][5] is None:
-                # maybe some time is NoneType, some time is str None
-                _dict['str_photo_commits'] = None
-            else:
-                _dict['str_photo_commits'] = base64.decodebytes(
-                    _r[0][5].encode('ascii')).decode('utf8')
+            _dict['str_photo_commits'] = (
+                make_raw_data_from_str_ascii_base64(_r[0][5]))
             return(_dict)
         elif len(_r) is 0:
             return(None)
