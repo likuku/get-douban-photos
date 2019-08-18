@@ -70,12 +70,8 @@ def upgrade_photo_page_info_in_db(
         input_str_photo_page_copyright_upload,
         input_str_photo_page_commits):
     _conn = input_db_conn
-    if input_str_photo_page_commits is None:
-        _photo_page_commits = None
-    else:
-        _photo_page_commits = base64.encodebytes(
-            input_str_photo_page_commits.encode('utf8')
-            ).decode('ascii')
+    _photo_page_commits = make_str_ascii_base64_from_raw_data(
+                            input_str_photo_page_commits)
     try:
         _cmd = '''UPDATE photos SET
                 str_photo_descri = "%s",
