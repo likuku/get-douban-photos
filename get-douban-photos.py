@@ -345,6 +345,14 @@ def get_photo_from_list_url_str_photo_file(input_list_url_str_photo):
                     if _response.status_code == requests.codes.ok:
                         open('images/%s' % _img_name_str, 'wb').write(_response.content)
                         print('%9d/%d OK' % (_index+1, len(_list)))
+                    else:
+                        _response = retry_get_response_photo_file_with_timeout(
+                            _url_str, 300)
+                        if _response is not None:
+                            open('images/%s' % _img_name_str, 'wb').write(_response.content)
+                            print('%9d/%d OK' % (_index+1, len(_list)))
+                        else:
+                            pass
                 else:
                     print('Download: %s' % _url_str, end=' ')
                     print('%9d/%d Warn: file existed' % (_index+1, len(_list)))
