@@ -33,6 +33,39 @@ def sleep_random_time():
     time.sleep(_time)
 
 
+def retry_get_response_photo_file_with_timeout(
+        input_photo_file_url,
+        input_time_out):
+    _url_str = input_photo_file_url
+    _time_out = float(input_time_out)
+    if _time_out < 60.0:
+        _time_out = 60.0
+    else:
+        pass
+    tmp_time_out = 1.0
+    while (tmp_time_out < _time_out):
+        tmp_time_out = tmp_time_out * (
+            random.choice((1, 2, 3, 4, 5, 6, 7, 8, 9)) * random.random())
+        # print('tmp_time_out: ', tmp_time_out)
+        print('Download: [retry] %s' % _url_str, end=' ')
+        try:
+            time.sleep(tmp_time_out)
+            _response = requests.get(_url_str, headers=HEADERS)
+            if _response.status_code == requests.codes.ok:
+                print('GOT')
+                return(_response)
+                break
+            else:
+                print('Failed')
+        except Exception as e:
+            pass
+            print('WTF')
+    else:
+        print('Download: [retry] %s' % _url_str, end=' ')
+        print('Error TimeOut over: %s' % (_time_out))
+        return(None)
+
+
 def make_str_ascii_base64_from_raw_data(input_data):
     _input = input_data
     if _input is None or _input == 'None':
