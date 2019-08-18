@@ -33,6 +33,36 @@ def sleep_random_time():
     time.sleep(_time)
 
 
+def make_str_ascii_base64_from_raw_data(input_data):
+    _input = input_data
+    if _input is None or _input == 'None':
+        _output = None
+    else:
+        try:
+            _output = base64.encodebytes(
+                _input.encode('utf8')
+                ).decode('ascii')
+        except Exception as e:
+            print('Error: ', e, _input)
+            pass
+    return(_output)
+
+
+def make_raw_data_from_str_ascii_base64(input_data):
+    _input = input_data
+    if _input is None or _input == 'None':
+        _output = None
+    else:
+        try:
+            _output = base64.decodebytes(
+                _input.encode('ascii')
+                ).decode('utf8')
+        except Exception as e:
+            print('Error: ', e, _input)
+            pass
+    return(_output)
+
+
 def upgrade_photo_page_info_in_db(
         input_db_conn,
         input_str_photo_page_url,
