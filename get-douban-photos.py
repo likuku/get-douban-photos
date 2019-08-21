@@ -15,6 +15,7 @@ import time
 import sqlite3
 import datetime
 import base64
+from configparser import ConfigParser
 
 USER_AGENTS = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/20100101 Firefox/11.0',
                'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100 101 Firefox/22.0',
@@ -22,8 +23,19 @@ USER_AGENTS = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/2010
                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_4) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.46 Safari/536.5',
                'Mozilla/5.0 (Windows; Windows NT 6.1) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.46 Safari/536.5',
                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',)
-# HEADERS = {'User-Agent': random.choice(USER_AGENTS)}
-HEADERS = {'User-Agent': USER_AGENTS[5]}
+HEADERS = {'User-Agent': random.choice(USER_AGENTS)}
+
+self_file_path_full = os.path.abspath(__file__)
+cfg_file_path = os.path.join(
+    os.path.dirname(self_file_path_full),
+    'config.cfg')
+cfg = ConfigParser()
+cfg.read(cfg_file_path)
+
+if cfg.getboolean('network', 'static_headers') is True:
+    HEADERS = {'User-Agent': USER_AGENTS[5]}
+else:
+    pass
 
 list_url_str_photo = []
 
